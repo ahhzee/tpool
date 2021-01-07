@@ -2,4 +2,4 @@
 
 tpool is a simple implementation of threadpool.
 
-Update: Now for debugging purposes, you may see the entire lifetime of a threadpool by adding a `-DDE_BUG` flag when compiling tpool to turn of a debugging mode.
+Update: Now for debugging purposes, you may see the entire lifetime of a threadpool by adding a `-DDE_BUG` flag when compiling tpool.
