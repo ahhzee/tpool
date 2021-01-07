@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include "tpool.h"
 
+#ifdef DE_BUG
+#include <stdio.h>
+#endif
+
 static void *tpool_worker(void *arg);
 static void  tpool_job_destroy(tpool_job_t *job);
 static tpool_job_t *tpool_job_get(tpool_t *tpool);
@@ -9,6 +13,9 @@ static tpool_job_t *tpool_job_create(thr_func_t func, void *arg);
 
 tpool_t *tpool_create(int num)
 {
+#ifdef DE_BUG
+    perror("tp_create");
+#endif
     tpool_t     *tpool;
     pthread_t   thread;
 
@@ -16,6 +23,7 @@ tpool_t *tpool_create(int num)
 
     tpool = (tpool_t *) malloc(sizeof(tpool_t));
     tpool->thread_cnt = num;
+    tpool->stopped = 0;
 
     pthread_mutex_init(&(tpool->work_mutex), NULL);
     pthread_cond_init(&(tpool->work_cond), NULL);
@@ -34,6 +42,9 @@ tpool_t *tpool_create(int num)
 
 void tpool_destroy(tpool_t *tpool)
 {
+#ifdef DE_BUG
+    perror("tp_destroy");
+#endif
     tpool_job_t *job;
     tpool_job_t *job2;
 
@@ -62,6 +73,9 @@ void tpool_destroy(tpool_t *tpool)
 
 int tpool_add_job(tpool_t *tpool, thr_func_t func, void *arg)
 {
+#ifdef DE_BUG
+    perror("tp_add_job");
+#endif
     tpool_job_t *job;
 
     if (tpool == NULL) return -1;
@@ -86,6 +100,9 @@ int tpool_add_job(tpool_t *tpool, thr_func_t func, void *arg)
 
 void tpool_wait(tpool_t *tpool)
 {
+#ifdef DE_BUG
+    perror("tp_wait");
+#endif
     if (tpool == NULL) return;
 
     pthread_mutex_lock(&(tpool->work_mutex));
@@ -110,6 +127,9 @@ void tpool_wait(tpool_t *tpool)
 
 static tpool_job_t *tpool_job_create(thr_func_t func, void *arg)
 {
+#ifdef DE_BUG
+    perror("tp_job_create");
+#endif
     tpool_job_t *job;
 
     if (func == NULL) return NULL;
@@ -124,12 +144,18 @@ static tpool_job_t *tpool_job_create(thr_func_t func, void *arg)
 
 static void tpool_job_destroy(tpool_job_t *job)
 {
+#ifdef DE_BUG
+    perror("tp_job_destroy");
+#endif
     if (job == NULL) return;
     free(job);
 }
 
 static tpool_job_t *tpool_job_get(tpool_t *tpool)
 {
+#ifdef DE_BUG
+    perror("tp_job_get");
+#endif
     tpool_job_t *job;
 
     if (tpool == NULL) return NULL;
@@ -150,6 +176,9 @@ static tpool_job_t *tpool_job_get(tpool_t *tpool)
 static void *tpool_worker(void *arg)
 /* what each thread will actually do */
 {
+#ifdef DE_BUG
+    perror("tp_worker");
+#endif
     tpool_t      *tpool = arg;
     tpool_job_t *job;
 
